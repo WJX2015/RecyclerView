@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
+    defaultConfig {
+        applicationId "com.example.lenovo_g50_70.recyclerview"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+/**
+ * 多渠道APK
+ */
+    productFlavors{
+    qihoo{
+        applicationId "com.example.lenovo_g50_70.recycler.qihoo"
+    }
+    baidu{
+        applicationId "com.example.lenovo_g50_70.recycler.baidu"
+    }
+}
+/**
+ * 自动生成签名APK
+ */
+    signingConfigs {
+        debug {
+            storeFile file(KEY_PATH)//签名文件路径
+            storePassword KEY_PASS
+            keyAlias ALIAS_NAME
+            keyPassword ALIAS_PASS  //签名密码
+        }
+        release {
+            storeFile file('KEY_PATH')//签名文件路径
+            storePassword KEY_PASS
+            keyAlias ALIAS_NAME
+            keyPassword ALIAS_PASS  //签名密码
+        }
+    }
+
+    buildTypes {
+        debug{
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+}
