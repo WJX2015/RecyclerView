@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 viewHolder.itemView.setBackgroundColor(0);
             }
         });
-        //helper.startDrag();
         mHelper.attachToRecyclerView(mRecyclerView);
     }
 
