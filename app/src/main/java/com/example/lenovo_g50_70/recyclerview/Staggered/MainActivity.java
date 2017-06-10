@@ -1,7 +1,9 @@
 package com.example.lenovo_g50_70.recyclerview.Staggered;
 
+import android.app.Service;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.dog8,R.drawable.dog9,R.drawable.dog10 };
     private MyAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private ItemTouchHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initHelper() {
-        ItemTouchHelper helper =new ItemTouchHelper(new ItemTouchHelper.Callback() {
+        //设置拖拽方向为以下情况的时候，实现拖拽效果
+//侧滑删除,当前没有设置拖拽删除的方向
+//首先回调的方法 返回int表示是否监听该方向
+//得到当拖拽的viewHolder的Position
+//拿到当前拖拽到的item的viewHolder
+//侧滑事件
+//长按可拖拽
+//当长按选中item的时候（拖拽开始的时候）调用
+//当手指松开的时候（拖拽完成的时候）调用
+        mHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 //设置拖拽方向为以下情况的时候，实现拖拽效果
@@ -76,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                //长按可拖拽
-                return true;
+                //长按可否拖拽
+                return false;
             }
 
             @Override
@@ -97,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //helper.startDrag();
-        helper.attachToRecyclerView(mRecyclerView);
+        mHelper.attachToRecyclerView(mRecyclerView);
     }
 
     private void initView() {
@@ -109,6 +121,26 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(manager);
         mAdapter = new MyAdapter(mDogList);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerGridItemDecoration(this));
+        mRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(mRecyclerView) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder vh) {
+
+            }
+
+            @Override
+            public void onItemLongClick(RecyclerView.ViewHolder vh) {
+                //判断被拖拽的是否是前两个，如果不是则执行拖拽
+                if (vh.getLayoutPosition() != 0 && vh.getLayoutPosition() != 1) {
+                    mHelper.startDrag(vh);
+
+                    //获取系统震动服务
+                    Vibrator vib = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);//震动70毫秒
+                    vib.vibrate(70);
+
+                }
+            }
+        });
     }
 
     private void ListData() {
