@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Scroller;
 
@@ -57,8 +56,9 @@ public class DeleteRecyclerView extends RecyclerView {
     public DeleteRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext=context;
+        //LinearInterpolator,动画的变化率
         scroller =new Scroller(mContext,new LinearInterpolator());
-        //构建滑动速度检测的类
+        //构建滑动速度检测的类,顾名思义即速度跟踪
         velocityTracker =VelocityTracker.obtain();
     }
 
